@@ -4,11 +4,12 @@
 Date: 2022/8/26 16:31
 Desc: 
 """
-from fastapi import FastAPI, APIRouter
 import uvicorn
-from my_model import engine, Score
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from fastapi import FastAPI
 from pydantic import BaseModel
+from sqlmodel import Session, select
+
+from my_model import engine, Score
 
 
 class UserScore(BaseModel):
@@ -39,5 +40,6 @@ async def get_root(user_name: str = "king"):
         results = session.exec(statement)
         return results.all()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     uvicorn.run("score_server:app", reload=True)
