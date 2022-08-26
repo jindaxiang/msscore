@@ -15,8 +15,9 @@ python score_server.py
 ```python
 import msscore as mc
 
-q_1 = [1, 2, 3]
 score = mc.score("answer")  # 其中的 answer 为答案文件，由 YAML 格式的文件构成
+
+q_1 = [1, 2, 3]  # 用户做的答案
 score.judge('q_1', q_1)  # 其中 `'q_1'` 为答案的索引（由管理员制定，必须一致），`q_1` 变量为答案，可以定义不同的变量名
 score.result  # 用户可以查看当前的成绩
 score.save()  # 用户可以提交成绩
@@ -39,3 +40,15 @@ score.save()  # 用户可以提交成绩
 ### MySQL
 
 后台数据库选择 MySQL 来进行管理
+
+## 异常处理
+
+### MySQLDB 缺失
+
+需要把如下代码放到报错的文件中如下：
+
+```python
+import pymysql
+
+pymysql.install_as_MySQLdb()
+```
