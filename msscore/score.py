@@ -8,6 +8,7 @@ import sys
 import yaml
 from typing import Any
 import os
+import requests
 
 
 class Score:
@@ -55,10 +56,20 @@ class Score:
 
     @property
     def result(self):
-        return{"回答正确": self.right_answer, "回答错误": self.wrong_answer}
+        return {"回答正确": self.right_answer, "回答错误": self.wrong_answer}
 
     def save(self):
-        print(self.name, self.result)
+        url = "http://127.0.0.1:8000"
+        payload = {
+            "user_name": self.name,
+            "right_num": self.right_answer,
+            "wrong_num": self.wrong_answer
+        }
+        r = requests.post(url, json=payload)
+        if r.status_code == 200:
+            return {"msg": "success"}
+        else:
+            return {"msg": "fail"}
 
 
 if __name__ == "__main__":

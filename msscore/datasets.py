@@ -6,6 +6,7 @@ Desc: 导入文件工具，可以正确处理路径问题
 """
 from importlib import resources
 import pathlib
+import akshare
 
 
 def get_ths_js(file: str = "ths.js") -> pathlib.Path:

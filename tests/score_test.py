@@ -11,7 +11,12 @@ q_2 = {"animal": "pig", "fruit": "apple", }
 score = mc.score("answer")
 score.judge("q_1", q_1)
 score.judge("q_2", q_2)
+score.judge("q_2", q_2)
+score.judge("q_2", q_2)
+score.judge("q_2", q_2)
+score.judge("q_2", q_2)
 score.judge("q_2", q_1)
 score.judge("q_2", {1, 3, 4})
+score.judge("q_2", {1, 3, 4, 5})
 score.result
 score.save()
