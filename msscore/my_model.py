@@ -7,6 +7,8 @@ Desc:
 from typing import Optional
 
 from sqlmodel import Field, SQLModel, create_engine
+from sqlalchemy import Column, TEXT
+from datetime import datetime
 
 
 class Score(SQLModel, table=True):
@@ -14,6 +16,10 @@ class Score(SQLModel, table=True):
     user_name: str
     right_num: int
     wrong_num: int
+    answer_title: str
+    answer_detail: str = Field(sa_column=Column(TEXT))
+    answer_result: str
+    created_at: datetime = Field(default_factory=datetime.now, nullable=False)
 
 
 MYSQL_DB = 'score'  # 数据库命

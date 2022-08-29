@@ -7,7 +7,8 @@ Desc:
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sqlmodel import Session, select
+from sqlmodel import Session, select, Field
+from sqlalchemy import Column, TEXT
 
 from my_model import engine, Score
 
@@ -16,6 +17,9 @@ class UserScore(BaseModel):
     user_name: str
     right_num: int
     wrong_num: int
+    answer_title: str
+    answer_detail: str = Field(sa_column=Column(TEXT))
+    answer_result: str
 
 
 app = FastAPI()
