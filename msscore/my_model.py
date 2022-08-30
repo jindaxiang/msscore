@@ -2,7 +2,7 @@
 # !/usr/bin/env python
 """
 Date: 2022/8/26 16:49
-Desc: 
+Desc: 模型层
 """
 from typing import Optional
 
@@ -14,8 +14,6 @@ from datetime import datetime
 class Score(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_name: str
-    right_num: int
-    wrong_num: int
     answer_title: str
     answer_detail: str = Field(sa_column=Column(TEXT))
     answer_result: str

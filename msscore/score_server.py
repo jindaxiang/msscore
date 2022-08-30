@@ -2,21 +2,19 @@
 # !/usr/bin/env python
 """
 Date: 2022/8/26 16:31
-Desc: 
+Desc: FastAPI 服务，用于接收判分的结果
 """
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sqlmodel import Session, select, Field
 from sqlalchemy import Column, TEXT
+from sqlmodel import Session, select, Field
 
 from my_model import engine, Score
 
 
 class UserScore(BaseModel):
     user_name: str
-    right_num: int
-    wrong_num: int
     answer_title: str
     answer_detail: str = Field(sa_column=Column(TEXT))
     answer_result: str
@@ -26,10 +24,10 @@ app = FastAPI()
 
 
 @app.post("/")
-async def get_root(user_socre: UserScore):
-    print(user_socre.dict())
-    print(type(user_socre))
-    score = Score(**user_socre.dict())
+async def get_root(user_score: UserScore):
+    print(user_score.dict())
+    print(type(user_score))
+    score = Score(**user_score.dict())
     with Session(engine) as session:
         session.add(score)
         session.commit()

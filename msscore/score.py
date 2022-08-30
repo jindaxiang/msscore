@@ -2,13 +2,14 @@
 # !/usr/bin/env python
 """
 Date: 2022/8/25 18:33
-Desc: 
+Desc: 判分主类，主要提供判分及保存
 """
-import sys
-import yaml
-from typing import Any
 import os
+import sys
+from typing import Any
+
 import requests
+import yaml
 
 
 class Score:
@@ -19,9 +20,16 @@ class Score:
         self.name = self.get_user_name()
         self.file_name = file_name
         self.answer = self.get_answer(file_name)
-        self.right_answer = 0
-        self.wrong_answer = 0
+        self.right_answer = {}
+        self.wrong_answer = {}
+        print(self.tips())
 
+    def tips(self):
+        tip_content = (
+            f"感谢您学习 {self.answer_title} 课程，本次课程共需要回答 {len(self.answer)} 个问题，问题的序号分别为：{list(self.answer.keys())}"
+            f"您需要使用 score.judge() 函数来提交问题。比如提交 `q_1` 问题的答案：score.judge('q_1', q_1)，其中 `'q_1'` 为序号，`q_1` 为答案变量。"
+        )
+        return tip_content
 
     @classmethod
     def get_user_name(cls):
@@ -32,7 +40,11 @@ class Score:
 
     def get_answer(self, file_name: str = "answer"):
         self.answer_title = file_name
-        file_address = os.path.abspath(__file__).rsplit("\\", maxsplit=1)[0] + '\\' + file_name
+        file_address = (
+            os.path.abspath(__file__).rsplit("\\", maxsplit=1)[0]
+            + "\\"
+            + file_name
+        )
         f = open(
             rf"{file_address}.yaml",
             "r",
@@ -46,21 +58,39 @@ class Score:
             )
         return answer_dict
 
-    def judge(self, q_name: str = None, q_value: Any = "hello"):
-        self.answer_detail[f"{q_name}_total_num"] = self.answer_detail.get(f"{q_name}_total_num", 0) + 1
-        print('---------------', self.answer)
-        previous_name = str(q_name)
-        present_name = str(q_name)
+    def judge(self, q_name: str = None, q_value: Any = "hello") -> str:
+        """
+        判分逻辑
+        :param q_name: 问题的序列号
+        :type q_name: str
+        :param q_value: 问题的答案
+        :type q_value: Any
+        :return: 回答正确与否
+        :rtype: str
+        """
+        # 记录具体 q_name 问题的回答次数
+        self.answer_detail[f"{q_name}_total_num"] = (
+            self.answer_detail.get(f"{q_name}_total_num", 0) + 1
+        )
         if str(q_name) in self.answer:
             answer_result = self.answer[str(q_name)]
             if answer_result == q_value:
-                self.right_answer = self.right_answer + 1
-                print('flag', str(q_name), self.right_answer + 1)
-                self.answer_detail[f"{str(q_name)}_total_right_num"] = self.right_answer
+                self.right_answer[f"{str(q_name)}_total_right_num"] = (
+                    self.right_answer.get(f"{str(q_name)}_total_right_num", 0)
+                    + 1
+                )
+                self.answer_detail[
+                    f"{str(q_name)}_total_right_num"
+                ] = self.right_answer[f"{str(q_name)}_total_right_num"]
                 return "回答正确"
             else:
-                self.wrong_answer = self.wrong_answer + 1
-                self.answer_detail[f"{str(q_name)}_total_wrong_num"] = self.wrong_answer
+                self.wrong_answer[f"{str(q_name)}_total_wrong_num"] = (
+                    self.wrong_answer.get(f"{str(q_name)}_total_wrong_num", 0)
+                    + 1
+                )
+                self.answer_detail[
+                    f"{str(q_name)}_total_wrong_num"
+                ] = self.wrong_answer[f"{str(q_name)}_total_wrong_num"]
                 return "回答错误"
         else:
             return "请输入正确的变量名称和变量"
@@ -70,17 +100,39 @@ class Score:
         return {"回答正确": self.right_answer, "回答错误": self.wrong_answer}
 
     def save(self):
-
         url = "http://127.0.0.1:8000"
-        right_num = len([value for key, value in self.answer_detail.items() if key.endswith("total_right_num") and value!=0])
-        all_num = len([value for key, value in self.answer_detail.items() if key.endswith("total_num")])
-        self.answer_result['right_rate'] = right_num / all_num
-        self.answer_result['right_question'] = ['_'.join(key.split("_")[:2]) for key, value in self.answer_detail.items() if key.endswith("total_right_num") and value!=0]
-        self.answer_result['wrong_question'] = list({'_'.join(key.split("_")[:2]) for key, value in self.answer_detail.items() if key.endswith("total_num")} - set(self.answer_result['right_question']))
+        right_num = len(
+            [
+                value
+                for key, value in self.answer_detail.items()
+                if key.endswith("total_right_num") and value != 0
+            ]
+        )
+        all_num = len(
+            [
+                value
+                for key, value in self.answer_detail.items()
+                if key.endswith("total_num")
+            ]
+        )
+        if len(self.answer) != all_num:
+            raise "请回答完所有问题后再提交答案"
+        self.answer_result["right_rate"] = right_num / all_num
+        self.answer_result["right_question"] = [
+            "_".join(key.split("_")[:2])
+            for key, value in self.answer_detail.items()
+            if key.endswith("total_right_num") and value != 0
+        ]
+        self.answer_result["wrong_question"] = list(
+            {
+                "_".join(key.split("_")[:2])
+                for key, value in self.answer_detail.items()
+                if key.endswith("total_num")
+            }
+            - set(self.answer_result["right_question"])
+        )
         payload = {
             "user_name": self.name,
-            "right_num": self.right_answer,
-            "wrong_num": self.wrong_answer,
             "answer_title": self.answer_title,
             "answer_detail": str(self.answer_detail),
             "answer_result": str(self.answer_result),
