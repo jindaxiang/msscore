@@ -40,11 +40,8 @@ class Score:
 
     def get_answer(self, file_name: str = "answer"):
         self.answer_title = file_name
-        file_address = (
-            os.path.abspath(__file__).rsplit("\\", maxsplit=1)[0]
-            + "\\"
-            + file_name
-        )
+        file_address = os.path.join(os.path.dirname(os.path.abspath(__file__)),  file_name)
+        print(file_address)
         f = open(
             rf"{file_address}.yaml",
             "r",
@@ -117,7 +114,7 @@ class Score:
         )
         if len(self.answer) != all_num:
             raise "请回答完所有问题后再提交答案"
-        self.answer_result["right_rate"] = right_num / all_num
+        self.answer_result["right_rate"] = round(right_num / all_num, 2)
         self.answer_result["right_question"] = [
             "_".join(key.split("_")[:2])
             for key, value in self.answer_detail.items()

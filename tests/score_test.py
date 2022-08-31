@@ -8,6 +8,7 @@ import msscore as mc
 
 q_1 = [1, 2, 3, 4]
 q_2 = {"animal": "pig", "fruit": "apple", }
+q_3 = 4
 score = mc.score("answer")
 score.judge("q_1", q_2)
 score.judge("q_1", q_2)
@@ -19,5 +20,6 @@ score.judge("q_2", q_2)
 score.judge("q_2", q_1)
 score.judge("q_2", {1, 3, 4})
 score.judge("q_2", {1, 3, 4, 5})
+score.judge("q_3", q_3)
 score.result
 score.save()
