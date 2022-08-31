@@ -20,11 +20,11 @@ class Score(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now, nullable=False)
 
 
-MYSQL_DB = 'score'  # 数据库命
-MYSQL_USER = 'root'  # 数据库账号
-MYSQL_PASSWD = 'king'  # 数据库登陆密码
-MYSQL_HOST = '127.0.0.1'  # 数据库地址
-MYSQL_POST = 3306  # 端口
+MYSQL_DB = 'score'  # MySQL 数据库名称
+MYSQL_USER = 'root'  # MySQL 数据库登录帐号
+MYSQL_PASSWD = 'king'  # MySQL 数据库登陆密码，由于格式化路径的问题，请勿使用 `@` 符号
+MYSQL_HOST = '127.0.0.1'  # MySQL 数据库地址，此处需要替换为服务器的地址
+MYSQL_POST = 3306  # MySQL 端口
 
 mysql_url = f"mysql://{MYSQL_USER}:{MYSQL_PASSWD}@{MYSQL_HOST}:{MYSQL_POST}/{MYSQL_DB}"
 

@@ -50,8 +50,8 @@ async def get_root(user_name: str = "king"):
     提交 Post 数据接口
     :param user_name: 用户名
     :type user_name: str
-    :return:
-    :rtype:
+    :return: 保存数据
+    :rtype: None
     """
     print(user_name)
     statement = select(Score).where(Score.user_name == user_name)
