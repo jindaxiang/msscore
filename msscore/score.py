@@ -100,7 +100,7 @@ class Score:
         return {"回答正确": self.right_answer, "回答错误": self.wrong_answer}
 
     def save(self):
-        url = "http://127.0.0.1:8000"
+        url = "http://140.210.214.231:8000/"
         right_num = len(
             [
                 value

@@ -45,10 +45,13 @@ score.save()  # 用户可以提交成绩
 
 ### MySQLDB 缺失
 
-需要把如下代码放到报错的文件中如下：
+```shell
+pip install mysqlclient
+```
 
-```python
-import pymysql
+### 启动
 
-pymysql.install_as_MySQLdb()
+```shell
+cd /usr/local/lib/python3.10/site-packages/msscore
+python score_server.py
 ```
