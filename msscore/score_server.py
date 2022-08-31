@@ -14,6 +14,9 @@ from my_model import engine, Score
 
 
 class UserScore(BaseModel):
+    """
+    Post 数据验证
+    """
     user_name: str
     answer_title: str
     answer_detail: str = Field(sa_column=Column(TEXT))
@@ -25,6 +28,13 @@ app = FastAPI()
 
 @app.post("/")
 async def get_root(user_score: UserScore):
+    """
+    根目录，仅做测试
+    :param user_score:
+    :type user_score:
+    :return:
+    :rtype:
+    """
     print(user_score.dict())
     print(type(user_score))
     score = Score(**user_score.dict())
@@ -36,6 +46,13 @@ async def get_root(user_score: UserScore):
 
 @app.get("/result")
 async def get_root(user_name: str = "king"):
+    """
+    提交 Post 数据接口
+    :param user_name: 用户名
+    :type user_name: str
+    :return:
+    :rtype:
+    """
     print(user_name)
     statement = select(Score).where(Score.user_name == user_name)
     with Session(engine) as session:
