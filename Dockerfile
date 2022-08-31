@@ -1,7 +1,7 @@
 # https://hub.docker.com/layers/python/library/python/3.10.1-buster/images/sha256-d59f2d9d7f17d34ad8e0c4aff37e61b181018413078ab8f0a688319ebee65d30?context=explore
 FROM python:3.10.1-buster
 
-MAINTAINER AKFamily <akfamily.aktools@gmail.com>
+MAINTAINER MaxSwell <daxiang.jin@maxsdsp.com>
 
 # time-zone
 RUN set -x \
@@ -12,7 +12,7 @@ RUN set -x \
     && echo "Asia/Shanghai" > /etc/timezone \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir fastapi
-RUN pip install --no-cache-dir uvicorn
-RUN pip install --no-cache-dir aktools
-RUN pip install --no-cache-dir msscore --upgrade
+RUN pip install --no-cache-dir fastapi[all]
+RUN pip install --no-cache-dir uvicorn[standard]
+RUN pip install --no-cache-dir pymysql
+RUN pip install --no-cache-dir pyyaml
