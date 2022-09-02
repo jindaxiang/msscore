@@ -38,6 +38,7 @@ async def get_root(user_score: UserScore):
     print(user_score.dict())
     print(type(user_score))
     score = Score(**user_score.dict())
+    print('ssss', score)
     with Session(engine) as session:
         session.add(score)
         session.commit()

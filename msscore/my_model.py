@@ -22,10 +22,11 @@ class Score(SQLModel, table=True):
 
 MYSQL_DB = "score"  # MySQL 数据库名称
 MYSQL_USER = "root"  # MySQL 数据库登录帐号
-MYSQL_PASSWD = "King-0575"  # MySQL 数据库登陆密码，由于格式化路径的问题，请勿使用 `@` 符号
+MYSQL_PASSWD = "-"  # MySQL 数据库登陆密码，由于格式化路径的问题，请勿使用 `@` 符号
+# MYSQL_PASSWD = "-"  # MySQL 数据库登陆密码，由于格式化路径的问题，请勿使用 `@` 符号
 # MYSQL_HOST = "127.0.0.1"  # MySQL 数据库地址，此处需要替换为服务器的地址
-MYSQL_HOST = "140.210.214.231"  # MySQL 数据库地址，此处需要替换为服务器的地址
+MYSQL_HOST = "-"  # MySQL 数据库地址，此处需要替换为服务器的地址
 MYSQL_POST = 3306  # MySQL 端口
-mysql_url = f"mysql://{MYSQL_USER}:{MYSQL_PASSWD}@{MYSQL_HOST}:{MYSQL_POST}/{MYSQL_DB}"
+mysql_url = f"mysql://{MYSQL_USER}:{MYSQL_PASSWD}@{MYSQL_HOST}:{MYSQL_POST}/{MYSQL_DB}?charset=utf8"
 engine = create_engine(mysql_url, echo=True)
 SQLModel.metadata.create_all(engine)

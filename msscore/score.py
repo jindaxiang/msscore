@@ -144,6 +144,10 @@ class Score:
 if __name__ == "__main__":
     q_1 = [1, 2, 3, 4]
     q_2 = {"fruit": "apple", "animal": "pig"}
-    score = Score("answer")
+    q_3 = {"fruit": "apple", "animal": "pig"}
+    score = Score("answer_中文")
     score.judge("q_1", q_1)
+    score.judge("q_2", q_2)
+    score.judge("q_3", q_3)
     score.result
+    score.save()
