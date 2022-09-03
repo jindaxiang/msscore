@@ -29,7 +29,7 @@ app = FastAPI()
 @app.post("/")
 async def get_root(user_score: UserScore):
     """
-    根目录，仅做测试
+    提交 Post 数据接口
     :param user_score:
     :type user_score:
     :return:
@@ -48,7 +48,7 @@ async def get_root(user_score: UserScore):
 @app.get("/result")
 async def get_root(user_name: str = "king"):
     """
-    提交 Post 数据接口
+    查看用户的情况
     :param user_name: 用户名
     :type user_name: str
     :return: 保存数据
