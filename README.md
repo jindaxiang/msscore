@@ -53,5 +53,5 @@ pip install mysqlclient
 
 ```shell
 cd /usr/local/lib/python3.10/site-packages/msscore
-python score_server.py
+python score_server.py  # 注意不能在 reload 设置 True
 ```
