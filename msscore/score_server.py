@@ -62,4 +62,4 @@ async def get_root(user_name: str = "king"):
 
 
 if __name__ == "__main__":
-    uvicorn.run("score_server:app", reload=True, host="0.0.0.0")
+    uvicorn.run("score_server:app", host="0.0.0.0")
