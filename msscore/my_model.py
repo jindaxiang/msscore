@@ -12,6 +12,9 @@ from datetime import datetime
 
 
 class Score(SQLModel, table=True):
+    """
+    数据模型
+    """
     id: Optional[int] = Field(default=None, primary_key=True)
     user_name: str
     answer_title: str
