@@ -1,6 +1,7 @@
 ## 介绍
 
-这是 msscore 的官方项目地址，本项目主要解决在 Jupyter Notebook 或 JupyterLab 中对题目进行记录及评分对问题。
+这是 msscore 的官方项目地址，本项目主要解决在 Jupyter Notebook 或 JupyterLab 中对题目进行记录及评分对问题。目前该项目已经迁移到 mssdk 中，
+但是作为服务端的程序还在这个项目中，目前本项目的部署主要依赖 Docker 来完成。
 
 ## 使用
 
