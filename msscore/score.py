@@ -35,7 +35,7 @@ class Score:
     def get_user_name(cls):
         # 获取 Ubuntu 系统的用户名
         user_name = sys.path[0].split("/")[-1].split("-")[-1]
-        user_name = "albert"  # 测试代码
+        user_name = "king"  # 测试代码
         return user_name
 
     def get_answer(self, file_name: str = "answer"):
@@ -97,7 +97,7 @@ class Score:
         return {"回答正确": self.right_answer, "回答错误": self.wrong_answer}
 
     def save(self):
-        url = "http://140.210.214.231:8000/"
+        url = "http://127.0.0.1:8000/"
         right_num = len(
             [
                 value
@@ -135,7 +135,8 @@ class Score:
             "answer_result": str(self.answer_result),
         }
         r = requests.post(url, json=payload)
-        if r.status_code == 200:
+        print(r.status_code)
+        if r.status_code == 201:
             return {"msg": "success"}
         else:
             return {"msg": "fail"}
@@ -150,4 +151,5 @@ if __name__ == "__main__":
     score.judge("q_2", q_2)
     score.judge("q_3", q_3)
     score.result
-    score.save()
+    msg = score.save()
+    print(msg)
