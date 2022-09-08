@@ -6,8 +6,28 @@ Desc: 数据模型层
 参考文章：
 https://cloud.tencent.com/developer/article/1949682
 """
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, ValidationError
 from datetime import datetime
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+
+
+class User(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
+
+
+class UserInDB(User):
+    hashed_password: str
 
 
 class Score(BaseModel):

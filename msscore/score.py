@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # !/usr/bin/env python
 """
-Date: 2022/8/25 18:33
+Date: 2022/9/8 18:33
 Desc: 判分主类，主要提供判分及保存
 """
 import os
@@ -135,7 +135,6 @@ class Score:
             "answer_result": str(self.answer_result),
         }
         r = requests.post(url, json=payload)
-        print(r.status_code)
         if r.status_code in [201, 200]:
             return {"msg": "success"}
         else:

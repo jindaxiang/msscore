@@ -17,18 +17,26 @@ class Settings(BaseSettings):
     数据库配置模型类
     """
     env_name: str = "Local"
-    mysql_db: str = "score"
-    mysql_user: str = "root"
-    mysql_passwd: str = "king"
-    mysql_host: str = "127.0.0.1"
-    mysql_port: int = 3306
 
     class Config:
         env_file = "../.env"
 
 
+class AuthSettings(Settings):
+    """
+    授权配置类
+    """
+    secret_key: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
+
 class LocalSettings(Settings):
-    pass
+    mysql_db: str = "score"
+    mysql_user: str = "root"
+    mysql_passwd: str = "king"
+    mysql_host: str = "127.0.0.1"
+    mysql_port: int = 3306
 
 
 class ServerSettings(Settings):
@@ -44,4 +52,11 @@ class ServerSettings(Settings):
 def get_local_settings() -> Settings:
     settings = LocalSettings()
     print(f"Loading local settings for: {settings.env_name}")
+    return settings
+
+
+@lru_cache()
+def get_auth_settings() -> Settings:
+    settings = AuthSettings()
+    print(f"加载授权环境变量成功")
     return settings

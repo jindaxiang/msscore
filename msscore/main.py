@@ -6,6 +6,7 @@ Desc: FastAPI 服务，用于接收判分的结果
 """
 import uvicorn
 from fastapi import FastAPI, status, Request, Form, Depends
+from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -17,6 +18,12 @@ from msscore import models
 from msscore import schemas
 from msscore.database import SessionLocal
 import msscore.crud as crud
+from msscore.schemas import Token, User
+from fastapi.security import OAuth2PasswordRequestForm
+from msscore.crud import authenticate_user, create_access_token, get_current_active_user
+from msscore.auth import fake_users_db, ACCESS_TOKEN_EXPIRE_MINUTES
+from datetime import timedelta
+
 
 models.Base.metadata.create_all(engine)
 
@@ -31,6 +38,31 @@ def get_db():
     finally:
         db.close()
 
+@app.post("/token", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.get("/users/me/", response_model=User)
+async def read_users_me(current_user: User = Depends(get_current_active_user)):
+    return current_user
+
+
+@app.get("/users/me/items/")
+async def read_own_items(current_user: User = Depends(get_current_active_user)):
+    return [{"item_id": "Foo", "owner": current_user.username}]
+
 
 @app.post("/", response_model=schemas.Score, response_model_exclude={'answer_result'})
 async def get_root(user_score: schemas.Score, db: Session = Depends(get_db)):
@@ -43,7 +75,7 @@ async def get_root(user_score: schemas.Score, db: Session = Depends(get_db)):
     :return:
     :rtype:
     """
-    return crud.create_user(db, user_score)
+    return crud.create_socre(db, user_score)
 
 
 @app.get("/result")
@@ -57,17 +89,17 @@ async def get_root(user_name: str = "king", db: Session = Depends(get_db)):
     :return: 保存数据
     :rtype: None
     """
-    return crud.get_user(db, user_name)
+    return crud.get_score(db, user_name)
 
 
 @app.get("/show")
 async def show(
         request: Request, user_name: str = "king", db: Session = Depends(get_db)
 ):
-    first_all = crud.get_user(db, user_name)
+    first_all = crud.get_score(db, user_name)
     return template.TemplateResponse(
         "index.html",
-        context={"request": request, "msg": first_all.user_name},
+        context={"request": request, "msg": first_all[0].user_name},
     )
 
 
