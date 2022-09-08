@@ -136,7 +136,7 @@ class Score:
         }
         r = requests.post(url, json=payload)
         print(r.status_code)
-        if r.status_code == 201:
+        if r.status_code in [201, 200]:
             return {"msg": "success"}
         else:
             return {"msg": "fail"}

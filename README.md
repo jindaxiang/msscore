@@ -13,7 +13,7 @@
 ### 开启后台接口
 
 ```shell
-python score_server.py
+python main.py
 ```
 
 ### 在 Jupyter 中使用
@@ -59,5 +59,5 @@ pip install mysqlclient
 
 ```shell
 cd /usr/local/lib/python3.10/site-packages/msscore
-python score_server.py  # 注意不能在 reload 设置 True
+python main.py  # 注意不能在 reload 设置 True
 ```
