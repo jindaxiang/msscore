@@ -9,6 +9,15 @@ from msscore import models, schemas
 from msscore.auth import pwd_context, SECRET_KEY, ALGORITHM, fake_users_db, oauth2_scheme
 from msscore.schemas import User, UserInDB, TokenData
 
+from msscore.database import SessionLocal
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -18,14 +27,15 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+def get_user(db: Session, username: str):
+    user = db.query(models.User).filter(models.User.username == username).first()
+    print(user)
+    if user:
+        return user
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(db: Session, username: str, password: str):
+    user = get_user(db=db, username=username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -44,7 +54,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(db: Session, token: str):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -58,13 +68,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(db=db, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
 
 
-async def get_current_active_user(current_user: User = Depends(get_current_user)):
+async def get_current_active_user(db: Session, token: str):
+    current_user = await get_current_user(db=db, token=token)
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

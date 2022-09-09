@@ -5,6 +5,7 @@ Date: 2022/8/26 16:31
 Desc: FastAPI 服务，用于接收判分的结果
 """
 import uvicorn
+from msscore.auth import pwd_context, SECRET_KEY, ALGORITHM, fake_users_db, oauth2_scheme
 from fastapi import FastAPI, status, Request, Form, Depends
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
@@ -38,9 +39,10 @@ def get_db():
     finally:
         db.close()
 
+
 @app.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+async def login_for_access_token(db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -54,17 +56,20 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
+@app.get("/users/me/", response_model=schemas.User)
+async def read_users_me(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    current_user = await get_current_active_user(db=db, token=token)
+    type(current_user)
     return current_user
 
 
 @app.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
+async def read_own_items(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    current_user = await get_current_active_user(db=db, token=token)
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 
-@app.post("/", response_model=schemas.Score, response_model_exclude={'answer_result'})
+@app.post("/", response_model=schemas.Score, response_model_exclude={"answer_result"})
 async def get_root(user_score: schemas.Score, db: Session = Depends(get_db)):
     """
     提交 Post 数据接口
@@ -94,7 +99,7 @@ async def get_root(user_name: str = "king", db: Session = Depends(get_db)):
 
 @app.get("/show")
 async def show(
-        request: Request, user_name: str = "king", db: Session = Depends(get_db)
+    request: Request, user_name: str = "king", db: Session = Depends(get_db)
 ):
     first_all = crud.get_score(db, user_name)
     return template.TemplateResponse(
