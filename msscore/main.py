@@ -5,12 +5,15 @@ Date: 2022/8/26 16:31
 Desc: FastAPI 服务，用于接收判分的结果
 """
 import uvicorn
-from msscore.auth import pwd_context, SECRET_KEY, ALGORITHM, fake_users_db, oauth2_scheme
 from fastapi import FastAPI, status, Request, Form, Depends
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+
+from msscore.auth import (
+    oauth2_scheme,
+)
 
 template = Jinja2Templates("../static")
 
@@ -19,10 +22,10 @@ from msscore import models
 from msscore import schemas
 from msscore.database import SessionLocal
 import msscore.crud as crud
-from msscore.schemas import Token, User
+from msscore.schemas import Token
 from fastapi.security import OAuth2PasswordRequestForm
 from msscore.crud import authenticate_user, create_access_token, get_current_active_user
-from msscore.auth import fake_users_db, ACCESS_TOKEN_EXPIRE_MINUTES
+from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
 
 
@@ -41,7 +44,9 @@ def get_db():
 
 
 @app.post("/token", response_model=Token)
-async def login_for_access_token(db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(
+    db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -57,14 +62,18 @@ async def login_for_access_token(db=Depends(get_db), form_data: OAuth2PasswordRe
 
 
 @app.get("/users/me/", response_model=schemas.User)
-async def read_users_me(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def read_users_me(
+    db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+):
     current_user = await get_current_active_user(db=db, token=token)
     type(current_user)
     return current_user
 
 
 @app.get("/users/me/items/")
-async def read_own_items(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+async def read_own_items(
+    db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+):
     current_user = await get_current_active_user(db=db, token=token)
     return [{"item_id": "Foo", "owner": current_user.username}]
 
