@@ -11,10 +11,6 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from msscore.auth import (
-    oauth2_scheme,
-)
-
 template = Jinja2Templates("../static")
 
 from database import engine
@@ -27,7 +23,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 from msscore.crud import authenticate_user, create_access_token, get_current_active_user
 from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
-
 
 models.Base.metadata.create_all(engine)
 
@@ -45,7 +40,7 @@ def get_db():
 
 @app.post("/token", response_model=Token)
 async def login_for_access_token(
-    db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+        db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -63,18 +58,15 @@ async def login_for_access_token(
 
 @app.get("/users/me/", response_model=schemas.User)
 async def read_users_me(
-    db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+        current_user=Depends(get_current_active_user)
 ):
-    current_user = await get_current_active_user(db=db, token=token)
-    type(current_user)
     return current_user
 
 
 @app.get("/users/me/items/")
 async def read_own_items(
-    db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+        current_user=Depends(get_current_active_user)
 ):
-    current_user = await get_current_active_user(db=db, token=token)
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 
@@ -108,7 +100,7 @@ async def get_root(user_name: str = "king", db: Session = Depends(get_db)):
 
 @app.get("/show")
 async def show(
-    request: Request, user_name: str = "king", db: Session = Depends(get_db)
+        request: Request, user_name: str = "king", db: Session = Depends(get_db)
 ):
     first_all = crud.get_score(db, user_name)
     return template.TemplateResponse(

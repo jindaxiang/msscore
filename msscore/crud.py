@@ -9,6 +9,8 @@ from msscore import models, schemas
 from msscore.auth import pwd_context, SECRET_KEY, ALGORITHM
 from msscore.database import SessionLocal
 from msscore.schemas import TokenData
+from fastapi import Depends
+from msscore.auth import oauth2_scheme
 
 
 def get_db():
@@ -53,7 +55,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(db: Session, token: str):
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -73,8 +75,7 @@ async def get_current_user(db: Session, token: str):
     return user
 
 
-async def get_current_active_user(db: Session, token: str):
-    current_user = await get_current_user(db=db, token=token)
+async def get_current_active_user(current_user=Depends(get_current_user)):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

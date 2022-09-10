@@ -20,6 +20,6 @@ MYSQL_PASSWD = local_settings.mysql_passwd  # MySQL 数据库登陆密码，由�
 MYSQL_HOST = local_settings.mysql_host  # MySQL 数据库地址，此处需要替换为服务器的地址
 MYSQL_PORT = local_settings.mysql_port  # MySQL 端口
 SQLALCHEMY_DATABASE_URL = f"mysql://{MYSQL_USER}:{MYSQL_PASSWD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}?charset=utf8"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
