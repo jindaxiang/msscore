@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta
 
-from fastapi import Depends, status
+from fastapi import status
 from fastapi.exceptions import HTTPException
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from msscore import models, schemas
-from msscore.auth import pwd_context, SECRET_KEY, ALGORITHM, fake_users_db, oauth2_scheme
-from msscore.schemas import User, UserInDB, TokenData
-
+from msscore.auth import pwd_context, SECRET_KEY, ALGORITHM
 from msscore.database import SessionLocal
+from msscore.schemas import TokenData
 
 
 def get_db():
@@ -18,6 +17,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -29,7 +29,6 @@ def get_password_hash(password):
 
 def get_user(db: Session, username: str):
     user = db.query(models.User).filter(models.User.username == username).first()
-    print(user)
     if user:
         return user
 
@@ -87,9 +86,8 @@ def get_score(db: Session, user_name: str):
 
 def create_socre(db: Session, score: schemas.Score):
     score_data = models.Score(**score.dict())
-    print('888888888888', score_data.user_name)
+    print("888888888888", score_data.user_name)
     db.add(score_data)
     db.commit()
     db.refresh(score_data)
     return score_data
-
