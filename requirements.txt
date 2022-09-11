@@ -8,3 +8,5 @@ pydantic
 requests
 python-jose[cryptography]
 passlib[bcrypt]
+casbin
+casbin_sqlalchemy_adapter

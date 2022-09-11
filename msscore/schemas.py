@@ -14,6 +14,14 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "access_token": "838743jijijfidfjaflsj",
+                "token_type": "Bearer"
+            }
+        }
+
 
 class TokenData(BaseModel):
     username: str | None = None
@@ -27,6 +35,14 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+        schema_extra = {
+            "example": {
+                "username": "Foo",
+                "email": "jindaxiang@163.com",
+                "full_name": "jindaxiang",
+                "disabled": False,
+            }
+        }
 
 
 class UserInDB(User):

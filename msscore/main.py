@@ -24,6 +24,8 @@ from msscore.crud import authenticate_user, create_access_token, get_current_act
 from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
 
+from msscore.rbac import e
+
 models.Base.metadata.create_all(engine)
 
 app = FastAPI()
@@ -38,9 +40,16 @@ def get_db():
         db.close()
 
 
-@app.post("/token", response_model=Token)
+@app.post(
+    "/token",
+    summary="Token 接口",
+    description="主要用于获取用户的 Token",
+    response_description="返回用户的 Token",
+    response_model=schemas.Token,
+)
 async def login_for_access_token(
-        db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+        db=Depends(get_db),
+        form_data: OAuth2PasswordRequestForm = Depends(),
 ):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -56,17 +65,27 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=schemas.User)
-async def read_users_me(
-        current_user=Depends(get_current_active_user)
-):
-    return current_user
+@app.get(
+    "/users/me/",
+    summary="Token 接口",
+    description="主要用于获取用户的 Token",
+    response_description="返回用户的 Token",
+    response_model=schemas.User)
+async def read_users_me(request: Request, current_user=Depends(get_current_active_user)):
+    print(current_user.username, request.url.path, request.method)
+    if e.enforce(current_user.username, request.url.path, request.method):
+        return current_user
+    else:
+        return {
+            "username": "xxx",
+            "email": "jindaxiang@163.com",
+            "full_name": "jindaxiang",
+            "disabled": True
+        }
 
 
 @app.get("/users/me/items/")
-async def read_own_items(
-        current_user=Depends(get_current_active_user)
-):
+async def read_own_items(current_user=Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 
