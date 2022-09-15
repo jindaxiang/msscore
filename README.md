@@ -8,6 +8,12 @@
 1. 登陆模块开发
 2. 完善注释
 
+## Redis 启动
+
+```shell
+brew services start redis
+```
+
 ## 使用
 
 ### 开启后台接口

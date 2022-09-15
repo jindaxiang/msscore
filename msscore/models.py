@@ -5,8 +5,9 @@ Date: 2022/9/8 15:20
 Desc: ORM 映射
 """
 import sqlalchemy as sa
+from sqlalchemy.ext.declarative import declarative_base
 
-from msscore.database import Base
+Base = declarative_base()
 
 
 class User(Base):

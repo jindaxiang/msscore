@@ -10,3 +10,6 @@ python-jose[cryptography]
 passlib[bcrypt]
 casbin
 casbin_sqlalchemy_adapter
+redis[hiredis]
+redis-om
+alembic

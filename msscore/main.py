@@ -13,12 +13,9 @@ from sqlalchemy.orm import Session
 
 template = Jinja2Templates("../static")
 
-from database import engine
-from msscore import models
 from msscore import schemas
 from msscore.database import SessionLocal
 import msscore.crud as crud
-from msscore.schemas import Token
 from fastapi.security import OAuth2PasswordRequestForm
 from msscore.crud import authenticate_user, create_access_token, get_current_active_user
 from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -26,7 +23,7 @@ from datetime import timedelta
 
 from msscore.rbac import e
 
-models.Base.metadata.create_all(engine)
+
 
 app = FastAPI()
 
