@@ -92,3 +92,8 @@ def create_socre(db: Session, score: schemas.Score):
     db.commit()
     db.refresh(score_data)
     return score_data
+
+
+if __name__ == '__main__':
+    hashed_password = get_password_hash("king")
+    print(hashed_password)

@@ -52,9 +52,10 @@ def get_db():
         db.close()
 
 
-@app.post("/uploadfiles")
+@app.post("/upload-files")
 async def create_upload_files(
     file: UploadFile = File(description="Multiple files as UploadFile"),
+    current_user=Depends(get_current_active_user)
 ):
     path = rf"../files/{file.filename}"
     with open(path, "w+b") as buffer:
