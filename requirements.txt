@@ -13,3 +13,4 @@ casbin_sqlalchemy_adapter
 redis[hiredis]
 redis-om
 alembic
+aiofiles

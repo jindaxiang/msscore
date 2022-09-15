@@ -4,28 +4,43 @@
 Date: 2022/8/26 16:31
 Desc: FastAPI 服务，用于接收判分的结果
 """
+import shutil
+from datetime import timedelta
+
 import uvicorn
-from fastapi import FastAPI, status, Request, Form, Depends
+from fastapi import FastAPI, status, Request, Form, Depends, UploadFile, File
 from fastapi.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-template = Jinja2Templates("../static")
-
-from msscore import schemas
-from msscore.database import SessionLocal
 import msscore.crud as crud
-from fastapi.security import OAuth2PasswordRequestForm
-from msscore.crud import authenticate_user, create_access_token, get_current_active_user
+from msscore import schemas
 from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
-from datetime import timedelta
-
+from msscore.crud import authenticate_user, create_access_token, get_current_active_user
+from msscore.database import SessionLocal
 from msscore.rbac import e
 
-
+template = Jinja2Templates("../static")
 
 app = FastAPI()
+
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount(r"/files", StaticFiles(directory="../files"), name="files")
 
 
 # Dependency
@@ -37,6 +52,17 @@ def get_db():
         db.close()
 
 
+@app.post("/uploadfiles")
+async def create_upload_files(
+    file: UploadFile = File(description="Multiple files as UploadFile"),
+):
+    path = rf"../files/{file.filename}"
+    with open(path, "w+b") as buffer:
+        print("i am here")
+        shutil.copyfileobj(file.file, buffer)
+    return {"filenames": file.filename}
+
+
 @app.post(
     "/token",
     summary="Token 接口",
@@ -45,8 +71,8 @@ def get_db():
     response_model=schemas.Token,
 )
 async def login_for_access_token(
-        db=Depends(get_db),
-        form_data: OAuth2PasswordRequestForm = Depends(),
+    db=Depends(get_db),
+    form_data: OAuth2PasswordRequestForm = Depends(),
 ):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -67,8 +93,11 @@ async def login_for_access_token(
     summary="Token 接口",
     description="主要用于获取用户的 Token",
     response_description="返回用户的 Token",
-    response_model=schemas.User)
-async def read_users_me(request: Request, current_user=Depends(get_current_active_user)):
+    response_model=schemas.User,
+)
+async def read_users_me(
+    request: Request, current_user=Depends(get_current_active_user)
+):
     print(current_user.username, request.url.path, request.method)
     if e.enforce(current_user.username, request.url.path, request.method):
         return current_user
@@ -77,7 +106,7 @@ async def read_users_me(request: Request, current_user=Depends(get_current_activ
             "username": "xxx",
             "email": "jindaxiang@163.com",
             "full_name": "jindaxiang",
-            "disabled": True
+            "disabled": True,
         }
 
 
@@ -116,7 +145,7 @@ async def get_root(user_name: str = "king", db: Session = Depends(get_db)):
 
 @app.get("/show")
 async def show(
-        request: Request, user_name: str = "king", db: Session = Depends(get_db)
+    request: Request, user_name: str = "king", db: Session = Depends(get_db)
 ):
     first_all = crud.get_score(db, user_name)
     return template.TemplateResponse(
