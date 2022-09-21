@@ -21,7 +21,6 @@ docs/_build/
 dist/
 *.egg-info/
 colors
-log/
 
 
 # IDE
