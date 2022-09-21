@@ -17,8 +17,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-
-
 import msscore.crud as crud
 from msscore import schemas
 from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
