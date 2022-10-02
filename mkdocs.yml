@@ -1,3 +1,10 @@
 site_name: MSScore 文档
+site_description: MSScore framework, high performance, easy to learn, fast to code, ready for production
+site_url: https://msscore.readthedocs.io/
 theme:
   name: material
+  logo: https://fastapi.tiangolo.com/img/icon-white.svg
+  favicon: https://fastapi.tiangolo.com/img/favicon.png
+  language: zh
+repo_name: jindaxiang/msscore
+repo_url: https://github.com/jindaxiang/msscore
