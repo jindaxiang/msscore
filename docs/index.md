@@ -28,7 +28,7 @@ python main.py
 
 ### 在 Jupyter 中使用
 
-```python
+```python linenums="1"
 import msscore as mc
 
 score = mc.score("answer")  # 其中的 answer 为答案文件，由 YAML 格式的文件构成
