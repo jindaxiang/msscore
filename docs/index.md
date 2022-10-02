@@ -22,9 +22,14 @@ brew services start redis
 
 ### 开启后台接口
 
+<div class="termy">
+
 ```console
-python main.py
+$ python main.py
+---> 100%
+Successfully installed msscore
 ```
+</div>
 
 ### 在 Jupyter 中使用
 
