@@ -14,7 +14,7 @@
 
 ## Redis 启动
 
-```shell
+```console
 brew services start redis
 ```
 
@@ -22,7 +22,7 @@ brew services start redis
 
 ### 开启后台接口
 
-```shell
+```console
 python main.py
 ```
 
@@ -61,13 +61,13 @@ score.save()  # 用户可以提交成绩
 
 ### MySQLDB 缺失
 
-```shell
+```console
 pip install mysqlclient
 ```
 
 ### 启动
 
-```shell
+```console
 cd /usr/local/lib/python3.10/site-packages/msscore
 python main.py  # 注意不能在 reload 设置 True
 ```
