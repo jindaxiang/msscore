@@ -12,7 +12,9 @@ casbin
 casbin_sqlalchemy_adapter
 redis[hiredis]
 redis-om
+python-dotenv>=0.21.0
 alembic
 aiofiles
 pre-commit
 commitizen
+mkdocs-material>=8.5.5
