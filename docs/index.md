@@ -22,13 +22,18 @@ brew services start redis
 
 ### 开启后台接口
 
+<div class="termy">
+
 ```console
-python main.py
+$ python main.py
+---> 100%
+Successfully installed msscore
 ```
+</div>
 
 ### 在 Jupyter 中使用
 
-```python linenums="1"
+```python
 import msscore as mc
 
 score = mc.score("answer")  # 其中的 answer 为答案文件，由 YAML 格式的文件构成

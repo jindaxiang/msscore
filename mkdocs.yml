@@ -23,9 +23,18 @@ theme:
         name: Switch to light mode
 repo_name: jindaxiang/msscore
 repo_url: https://github.com/jindaxiang/msscore
+
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
+extra_css:
+  - 'css/termynal.css'
+  - 'css/custom.css'
+
+extra_javascript:
+  - 'js/termynal.js'
+  - 'js/custom.js'
