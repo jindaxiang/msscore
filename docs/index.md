@@ -1,15 +1,15 @@
-# Welcome to MkDocs
+# 欢迎来到 MSScore 官方文档
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+完整的文档请访问：[MSScore 官方文档](https://msscore.readthedocs.io/).
 
-## Commands
+## 命令工具
 
 * `mkdocs new [dir-name]` - Create a new project.
 * `mkdocs serve` - Start the live-reloading docs server.
 * `mkdocs build` - Build the documentation site.
 * `mkdocs -h` - Print help message and exit.
 
-## Project layout
+## 项目结构
 
     mkdocs.yml    # The configuration file.
     docs/
