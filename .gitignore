@@ -21,7 +21,6 @@ docs/_build/
 dist/
 *.egg-info/
 colors
-log/
 
 
 # IDE
@@ -31,3 +30,5 @@ log/
 .ipynb_checkpoints
 #docs/source/_static/
 #docs/source/_templates/
+/log/*
+.DS_Store
