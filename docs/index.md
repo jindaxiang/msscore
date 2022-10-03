@@ -74,9 +74,15 @@ score.save()  # 用户可以提交成绩
 
 ### MySQLDB 缺失
 
+<div class="termy">
+
 ```console
-pip install mysqlclient
+$ pip install mysqlclient
+---> 100%
+Successfully started msscore
 ```
+
+</div>
 
 ### 启动
 
