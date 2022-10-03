@@ -14,9 +14,15 @@
 
 ## Redis 启动
 
+<div class="termy">
+
 ```console
-brew services start redis
+$ brew services start redis
+---> 100%
+Successfully started redis
 ```
+
+</div>
 
 ## 使用
 
@@ -27,7 +33,7 @@ brew services start redis
 ```console
 $ python main.py
 ---> 100%
-Successfully installed msscore
+Successfully started msscore
 ```
 </div>
 
