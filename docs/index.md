@@ -1,6 +1,6 @@
 # 欢迎来到 MSScore 官方文档
 
-完整的文档请访问：[MSScore 官方文档](https://msscore.readthedocs.io/).
+完整的文档请访问：[MSScore 官方文档](https://msscore.readthedocs.io/)。
 
 ## 介绍
 
@@ -11,6 +11,7 @@
 
 1. 登陆模块开发
 2. 完善注释
+3. 完善使用文档
 
 ## Redis 启动
 
@@ -67,7 +68,7 @@ score.save()  # 用户可以提交成绩
 
 ### MySQL
 
-后台数据库选择 MySQL 来进行管理
+后台数据库选择 MySQL 8 来进行管理
 
 ## 异常处理
 
