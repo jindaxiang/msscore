@@ -55,7 +55,7 @@ def get_db():
 @app.post("/upload-files")
 async def create_upload_files(
     file: UploadFile = File(description="Multiple files as UploadFile"),
-    current_user=Depends(get_current_active_user)
+    current_user=Depends(get_current_active_user),
 ):
     path = rf"../files/{file.filename}"
     with open(path, "w+b") as buffer:
@@ -116,7 +116,12 @@ async def read_own_items(current_user=Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
 
 
-@app.post("/", response_model=schemas.Score, response_model_exclude={"answer_result"})
+@app.post(
+    "/",
+    response_model=schemas.Score,
+    response_model_exclude={"answer_result"},
+    status_code=status.HTTP_201_CREATED,
+)
 async def get_root(user_score: schemas.Score, db: Session = Depends(get_db)):
     """
     提交 Post 数据接口
