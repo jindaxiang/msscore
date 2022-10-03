@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
-# _*_ coding: utf-8 _*_
-# @Time : 2021/11/13 13:41
-# @Author : zxiaosi
-# @desc : 响应状态码
-from typing import Union, Any, Optional
+# -*- coding:utf-8 -*-
+# !/usr/bin/env python
+"""
+Date: 2022/9/8 15:20
+Desc: 日志模块
+"""
+from typing import Union, Any
+
 from fastapi import status
-from fastapi.responses import Response
 from fastapi.responses import ORJSONResponse
+from fastapi.responses import Response
 
 from core.logger import logger
 

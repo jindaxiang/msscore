@@ -17,12 +17,14 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-import msscore.crud as crud
+from msscore import crud
 from msscore import schemas
 from msscore.auth import ACCESS_TOKEN_EXPIRE_MINUTES
 from msscore.crud import authenticate_user, create_access_token, get_current_active_user
 from msscore.database import SessionLocal
 from msscore.rbac import e
+
+from utils.resp_code import resp_200, resp_422
 
 template = Jinja2Templates("../static")
 
@@ -118,9 +120,9 @@ async def read_own_items(current_user=Depends(get_current_active_user)):
 
 @app.post(
     "/",
-    response_model=schemas.Score,
+    # response_model=schemas.Score,
     response_model_exclude={"answer_result"},
-    status_code=status.HTTP_201_CREATED,
+    # status_code=status.HTTP_201_CREATED,
 )
 async def get_root(user_score: schemas.Score, db: Session = Depends(get_db)):
     """
@@ -132,7 +134,9 @@ async def get_root(user_score: schemas.Score, db: Session = Depends(get_db)):
     :return:
     :rtype:
     """
-    return crud.create_socre(db, user_score)
+    inserted_data = crud.create_score(db, user_score)
+    return resp_200(data=inserted_data, msg="Success")
+
 
 
 @app.get("/result")

@@ -5,20 +5,12 @@ Date: 2022/9/8 15:20
 Desc: 配置文件
 """
 from functools import lru_cache
-import logging
+from core.logger import logger
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings
 
 load_dotenv()
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-                    datefmt='%a, %d %b %Y %H:%M:%S',
-                    filename='../logs/msscore.log',
-                    filemode='a+')
-
-log = logging.getLogger("uvicorn")
 
 
 class Settings(BaseSettings):
@@ -60,12 +52,12 @@ class ServerSettings(Settings):
 @lru_cache
 def get_local_settings() -> Settings:
     settings = LocalSettings()
-    log.info(f"Loading local settings for: {settings.env_name}")
+    logger.info(f"Loading local settings for: {settings.env_name}")
     return settings
 
 
 @lru_cache()
 def get_auth_settings() -> Settings:
     settings = AuthSettings()
-    log.info(f"加载授权环境变量成功")
+    logger.info(f"加载授权环境变量成功")
     return settings

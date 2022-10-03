@@ -21,7 +21,7 @@ class User(Base):
     email = sa.Column(sa.String(100), nullable=False, comment="邮箱")
     full_name = sa.Column(sa.String(100), nullable=False, comment="全名")
     disabled = sa.Column(sa.Boolean, default=0)
-    created_at = sa.Column(sa.DateTime, server_default=sa.func.now(), comment="回答时间")
+    created_at = sa.Column(sa.DateTime(), nullable=False, server_default=sa.func.now(), comment="回答时间")
 
 
 class Score(Base):
@@ -38,4 +38,4 @@ class Score(Base):
     answer_title = sa.Column(sa.String, nullable=False, comment="答案文件名")
     answer_detail = sa.Column(sa.Text, nullable=False, comment="答案详情")
     answer_result = sa.Column(sa.Text, nullable=False, comment="答案结果")
-    created_at = sa.Column(sa.DateTime, nullable=False, server_default=sa.func.now(), comment="回答时间")
+    created_at = sa.Column(sa.DateTime(), nullable=False, server_default=sa.func.now(), comment="回答时间")

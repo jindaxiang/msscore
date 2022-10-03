@@ -59,6 +59,14 @@ class Score(BaseModel):
 
     class Config:
         orm_mode = True
+        schema_extra = {
+            "example": {
+                "user_name": "albert",
+                "answer_title": "answer",
+                "answer_detail": "jindaxiang",
+                "answer_result": "jindaxiang",
+            }
+        }
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # !/usr/bin/env python
 """
-Date: 2022/9/8 18:33
+Date: 2022/8/25 18:33
 Desc: 判分主类，主要提供判分及保存
 """
 import os
@@ -19,14 +19,14 @@ class Score:
         self.answer_detail = {}
         self.name = self.get_user_name()
         self.file_name = file_name
-        self.answer = self.get_answer(file_name)
+        self.__answer = self.get_answer(file_name)
         self.right_answer = {}
         self.wrong_answer = {}
         print(self.tips())
 
     def tips(self):
         tip_content = (
-            f"感谢您学习 {self.answer_title} 课程，本次课程共需要回答 {len(self.answer)} 个问题，问题的序号分别为：{list(self.answer.keys())}"
+            f"感谢您学习 {self.answer_title} 课程，本次课程共需要回答 {len(self.__answer)} 个问题，问题的序号分别为：{list(self.__answer.keys())}"
             f"您需要使用 score.judge() 函数来提交问题。比如提交 `q_1` 问题的答案：score.judge('q_1', q_1)，其中 `'q_1'` 为序号，`q_1` 为答案变量。"
         )
         return tip_content
@@ -34,14 +34,13 @@ class Score:
     @classmethod
     def get_user_name(cls):
         # 获取 Ubuntu 系统的用户名
-        user_name = sys.path[0].split("/")[-1].split("-")[-1]
-        user_name = "king"  # 测试代码
+        # user_name = sys.path[-1].split("/")[-2].split("-")[-1]
+        user_name = "albert"
         return user_name
 
     def get_answer(self, file_name: str = "answer"):
         self.answer_title = file_name
         file_address = os.path.join(os.path.dirname(os.path.abspath(__file__)),  file_name)
-        print(file_address)
         f = open(
             rf"{file_address}.yaml",
             "r",
@@ -69,8 +68,8 @@ class Score:
         self.answer_detail[f"{q_name}_total_num"] = (
             self.answer_detail.get(f"{q_name}_total_num", 0) + 1
         )
-        if str(q_name) in self.answer:
-            answer_result = self.answer[str(q_name)]
+        if str(q_name) in self.__answer:
+            answer_result = self.__answer[str(q_name)]
             if answer_result == q_value:
                 self.right_answer[f"{str(q_name)}_total_right_num"] = (
                     self.right_answer.get(f"{str(q_name)}_total_right_num", 0)
@@ -112,7 +111,8 @@ class Score:
                 if key.endswith("total_num")
             ]
         )
-        if len(self.answer) != all_num:
+        if len(self.__answer) != all_num:
+            print("请回答完所有问题后再提交答案")
             raise "请回答完所有问题后再提交答案"
         self.answer_result["right_rate"] = round(right_num / all_num, 2)
         self.answer_result["right_question"] = [
@@ -135,7 +135,7 @@ class Score:
             "answer_result": str(self.answer_result),
         }
         r = requests.post(url, json=payload)
-        if r.status_code in [201, 200]:
+        if r.status_code in [200, 201]:
             return {"msg": "success"}
         else:
             return {"msg": "fail"}
@@ -143,12 +143,16 @@ class Score:
 
 if __name__ == "__main__":
     q_1 = [1, 2, 3, 4]
-    q_2 = {"fruit": "apple", "animal": "pig"}
-    q_3 = {"fruit": "apple", "animal": "pig"}
+    q_2 = {"fruit": "苹果", "animal": "pig"}
+    q_3 = {"fruit": "苹果", "animal": "pig"}
+    q_4 = {"fruit": "苹果", "animal": "pig"}
+    q_5 = {"fruit": "苹果", "animal": "pig"}
     score = Score("answer_中文")
     score.judge("q_1", q_1)
     score.judge("q_2", q_2)
     score.judge("q_3", q_3)
+    # score.judge("q_4", q_4)
+    # score.judge("q_5", q_5)
     score.result
-    msg = score.save()
-    print(msg)
+    result = score.save()
+    print(result)

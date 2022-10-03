@@ -1,10 +1,12 @@
-#!/usr/bin/env python3
-# _*_ coding: utf-8 _*_
-# @Time : 2021/9/19 17:02
-# @Author : zxiaosi
-# @desc : 配置文件
+# -*- coding:utf-8 -*-
+# !/usr/bin/env python
+"""
+Date: 2022/9/8 15:20
+Desc: 配置文件
+"""
 import secrets
 from typing import Union, List
+
 from pydantic import BaseSettings, AnyHttpUrl
 
 project_desc = """
